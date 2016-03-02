@@ -1,0 +1,4 @@
+<?php
+define("PBX_API_KEY", "");
+define("PBX_DOMAIN", "");
+define("BOT_TOKEN", '');
