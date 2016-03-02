@@ -1,5 +1,5 @@
 <?php
-function getCalls($secret_key, $key_id, $hour = 12)
+function get_calls($secret_key, $key_id, $hour = 12)
 {
     if (date("H") < $hour) {
         $date_to = date('r');
@@ -15,7 +15,7 @@ function getCalls($secret_key, $key_id, $hour = 12)
         '206' => 'Наиль',
     ];
 
-    $url = "api.onlinepbx.ru/" . PBX_DOMAIN .  "/history/search.json";
+    $url = "api.onlinepbx.ru/" . PBX_DOMAIN . "/history/search.json";
     $date_from = date('r', strtotime(date("Y-m-d")));
 
     $post = [
@@ -42,9 +42,7 @@ function getCalls($secret_key, $key_id, $hour = 12)
             $calls[$num]['billsec'] += (int) $item['billsec'];
             $calls[$num]['count_success']++;
         }
-
     }
-
 
     echo "Звонки на {$hour} часов (кол-во / продолжительность)" . PHP_EOL;
     foreach ($calls as $num => $caller) {

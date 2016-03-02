@@ -1,0 +1,19 @@
+#!/bin/bash
+#
+# Конфиг для развертывания
+#
+
+PROD_HOST="q4@ssh.q4.nichost.ru"
+PROD_DIR="${PROD_HOST}:crm.neq4.ru/bot/"
+
+# каталог обмена от домашнего каталога
+PROD_SWAP_DIR="tmp/"
+
+# каталог бекапов от домашнего каталога
+PROD_BACKUP_DIR="backup/"
+
+# каталог приложения
+LOCAL_DIR="./"
+
+# каталог обмена - путь от ./bin/..
+LOCAL_SWAP_DIR="tmp/"

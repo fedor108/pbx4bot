@@ -1,0 +1,12 @@
+#!/bin/bash
+#
+# Отметка времени публикации скриптов
+#
+
+# подключение конфига
+. bin/config
+
+# текущая дата
+DATE=`date +%Y-%m-%d\ %H:%M:%S`
+
+echo "${DATE} - ${USER}" >> ${LOCAL_DIR}/version.txt

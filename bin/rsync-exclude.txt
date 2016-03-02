@@ -1,0 +1,13 @@
+tmp/
+bin/
+*~
+.fuse_hidden*
+.git
+.gitignore
+backup/
+logs/
+php/
+stat/
+errordocs/
+cgi/
+calls.txt

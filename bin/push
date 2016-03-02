@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# полный путь до скрипта
+FILE=`readlink -e "$0"`
+
+# каталог в котором лежит скрипт
+DIR=`dirname "$FILE"`
+
+# выход в каталок проекта из bin
+cd $DIR/..
+
+. bin/config
+
+# отмечаем время обновления скриптов
+bin/log
+
+# скрипты с удалением того, чего нет локально
+rsync -av --delete --exclude-from "bin/rsync-exclude.txt" $LOCAL_DIR $PROD_DIR
