@@ -9,7 +9,5 @@ if ($key_results) {
     $key_id = $key_results['data']['key_id'];
 }
 
-$times = [12, 14, 17, 19];
-foreach ($times as $hour) {
-    get_calls($secret_key, $key_id, $hour);
-}
+$calls = get_calls($secret_key, $key_id);
+put_calls($calls);
