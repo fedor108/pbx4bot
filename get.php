@@ -1,7 +1,8 @@
 <?php
-require_once './app/onpbx_http_api.php';
-require_once './app/config.php';
-require_once './app/onpbx.php';
+$root = __DIR__;
+require_once $root . '/app/onpbx_http_api.php';
+require_once $root . '/app/config.php';
+require_once $root . '/app/onpbx.php';
 
 $key_results = onpbx_get_secret_key(PBX_DOMAIN, PBX_API_KEY, $new=false);
 if ($key_results) {
