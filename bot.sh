@@ -5,5 +5,10 @@
 # Отправить отчет в Телеграмм
 #
 
-php -c ~/etc/php.ini get.php > calls.txt
-php -c ~/etc/php.ini send.php
+# Текущая директория
+FILE=`realpath "${0}"`
+DIR=`dirname "${FILE}"`
+cd "${DIR}"
+
+php -c ~/etc/php.ini ./get.php > calls.txt
+php -c ~/etc/php.ini ./send.php

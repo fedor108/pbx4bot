@@ -1,5 +1,5 @@
 <?php
-function get_calls($secret_key, $key_id)
+function get_calls($secret_key, $key_id, $now = false)
 {
     $caller_names = [
         '141' => 'Илья',
@@ -9,10 +9,19 @@ function get_calls($secret_key, $key_id)
     ];
 
     $url = "api.onlinepbx.ru/" . PBX_DOMAIN . "/history/search.json";
+
+    if ($now) {
+        $date_to = date('r');
+        $time = date('H:i');
+    } else {
+        $date_to = date('r', strtotime(date("Y-m-d H")));
+        $time = date('H');
+    }
+
     $post = [
         'billsec_from' => 6,
         'date_from' => date('r', strtotime(date("Y-m-d"))),
-        'date_to' => date('r', strtotime(date("Y-m-d H"))),
+        'date_to' => $date_to,
     ];
     $calls_results = onpbx_api_query($secret_key, $key_id, $url, $post);
 
@@ -33,12 +42,18 @@ function get_calls($secret_key, $key_id)
         $calls[$num]['billsec'] += (int) $item['billsec'];
     }
 
-    return $calls;
+    return compact('calls', 'time');
 }
 
-function put_calls($calls)
+function put_calls($params)
 {
-    echo "Звонки на " . date('H') . " часов (кол-во / продолжительность)" . PHP_EOL;
+    extract($params);
+    if (strpos($time, ':')) {
+        echo "Звонки на " . $time . " (кол-во / продолжительность)" . PHP_EOL;
+    } else {
+        echo "Звонки на " . $time . " часов (кол-во / продолжительность)" . PHP_EOL;
+    }
+
     foreach ($calls as $num => $caller) {
         $billsec = round($caller['billsec'] / 60);
         $count = count($caller['items']);

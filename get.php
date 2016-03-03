@@ -8,6 +8,12 @@ if ($key_results) {
     $secret_key = $key_results['data']['key'];
     $key_id = $key_results['data']['key_id'];
 }
+if (!empty($argv[1]) && ('now' == $argv[1])) {
+    // отчет по звонкам не текущий момент
+    $calls = get_calls($secret_key, $key_id, true);
+} else {
+    // отчет по звонкам на начало текущего часа
+    $calls = get_calls($secret_key, $key_id);
+}
 
-$calls = get_calls($secret_key, $key_id);
 put_calls($calls);
