@@ -1,4 +1,5 @@
 <?php
+require_once __DIR__ . "../vendor/fedor108/onpbx/onpbx_http_api.php";
 
 class Call
 {
@@ -13,6 +14,7 @@ class Call
             $key_id = $key['data']['key_id'];
         }
     }
+
     public function get($date_to = null)
     {
         $url = "api.onlinepbx.ru/" . PBX_DOMAIN . "/history/search.json";

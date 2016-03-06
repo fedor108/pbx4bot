@@ -1,0 +1,58 @@
+{
+    "name": "fedor108/pbx4bot",
+    "type": "library",
+    "description": "Telergam bot",
+    "keywords": [
+        "fedor108",
+        "pbx4bot"
+    ],
+    "homepage": "https://github.com/fedor108/pbx4bot",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "fedor108",
+            "email": "fedor108@gmail.com",
+            "homepage": "https://github.com/fedor108",
+            "role": "Developer"
+        }
+    ],
+    "require": {
+        "php" : "~5.5|~7.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit" : "4.*",
+        "scrutinizer/ocular": "~1.1",
+        "squizlabs/php_codesniffer": "~2.3"
+    },
+    "autoload": {
+        "psr-4": {
+            "fedor108\\pbx4bot\\": "src"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "fedor108\\pbx4bot\\": "tests"
+        }
+    },
+    "scripts": {
+        "test": "phpunit"
+    },
+    "extra": {
+        "branch-alias": {
+            "dev-master": "1.0-dev"
+        }
+    },
+    "require": {
+        "league/climate": "^3.2",
+        "irazasyed/telegram-bot-sdk": "^2.0"
+    },
+    "require": {
+        "fedor108/onpbx": "dev-master"
+    },
+    "repositories": [
+        {
+            "type": "vcs",
+            "url":  "git@github.com:fedor108/onpbx.git"
+        }
+    ]
+}
