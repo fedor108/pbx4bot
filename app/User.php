@@ -2,10 +2,10 @@
 class User
 {
     public $data = [
-        ['pbx_id' => '141', 'amo_id' => '557817', 'name' => 'Иля'],
-        ['pbx_id' => '201', 'amo_id' => '668394', 'name' => 'Яна'],
-        ['pbx_id' => '203', 'amo_id' => '708804', 'name' => 'Ильфат'],
-        ['pbx_id' => '206', 'amo_id' => '643530', 'name' => 'Наиль'],
+        ['id' => 1, 'pbx_id' => '141', 'amo_id' => '557817', 'name' => 'Иля'],
+        ['id' => 2, 'pbx_id' => '201', 'amo_id' => '668394', 'name' => 'Яна'],
+        ['id' => 3, 'pbx_id' => '203', 'amo_id' => '708804', 'name' => 'Ильфат'],
+        ['id' => 4, 'pbx_id' => '206', 'amo_id' => '643530', 'name' => 'Наиль'],
     ];
 
     public function get()
@@ -22,7 +22,7 @@ class User
         return $res;
     }
 
-    public function getAmoPbx()
+    public function getByAmo()
     {
         $res = [];
         foreach ($this->data as $user) {

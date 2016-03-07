@@ -7,6 +7,9 @@ class Call
 {
     public $secret_key;
     public $key_id;
+    public $calls;
+    public $time;
+    public $result;
 
     public function __construct()
     {
@@ -23,49 +26,63 @@ class Call
         }
     }
 
-    public function get($date_to = null)
+    public function getCountsPerUser($post = [])
     {
         $url = "api.onlinepbx.ru/" . PBX_DOMAIN . "/history/search.json";
 
-        if (is_null($date_to)) {
-            $date_to = date('r');
+        if (empty($post['date_from'])) {
+            $post['date_from'] = date('r', strtotime(date("Y-m-d")));
+        } else {
+            $post['date_from'] = date('r', strtotime($post['date_from']));
         }
 
-        $time = date('H:i');
+        if (empty($post['date_to'])) {
+            $post['date_to'] = date('r');
+        } else {
+            $post['date_to'] = date('r', strtotime($post['date_to']));
+        }
 
-        $post = [
-            'billsec_from' => 6,
-            'date_from' => date('r', strtotime(date("Y-m-d"))),
-            'date_to' => $date_to,
-        ];
-        $results = onpbx_api_query($this->secret_key, $this->key_id, $url, $post);
+        if (empty($post['billsec_from'])) {
+            $post['billsec_from'] = 6;
+        }
+
+        $result = onpbx_api_query($this->secret_key, $this->key_id, $url, $post);
 
         $calls = [];
-        if (!empty($results['data'])) {
+        if (!empty($result['data'])) {
             $user = new User;
             $users_by_pbx = $user->getByPbx();
-            foreach ($results['data'] as $item) {
+            foreach ($result['data'] as $item) {
                 $pbx_id = $item['caller'];
                 if (! array_key_exists($pbx_id, $users_by_pbx)) {
                     continue;
                 }
-                if (empty($calls[$pbx_id])) {
-                    $calls[$pbx_id] = [
-                        'items' => [],
+                $id = $users_by_pbx[$pbx_id]['id'];
+                if (empty($calls[$id])) {
+                    $calls[$id] = [
+                        // 'items' => [],
                         'billsec' => 0,
                         'user' => $users_by_pbx[$pbx_id],
+                        'count' => 0,
                     ];
                 }
-                $calls[$pbx_id]['items'][] = $item;
-                $calls[$pbx_id]['billsec'] += (int) $item['billsec'];
+                // $calls[$id]['items'][] = $item;
+                $calls[$id]['billsec'] += (int) $item['billsec'];
+                $calls[$id]['count']++;
             }
         }
 
-        array_walk($calls, function (&$item) {
-            $item['count'] = count($item['items']);
-        });
+        // array_walk($calls, function (&$item) {
+        //     $item['count'] = count($item['items']);
+        //     unset($item['items']);
+        // });
+
+        $time = date('H:i', strtotime($post['date_to']));
+
+        $this->result = $result;
+        $this->calls = $calls;
+        $this->time = $time;
 
         return compact('calls', 'time');
-
     }
 }
