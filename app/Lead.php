@@ -77,12 +77,11 @@ class Lead
 
         do {
             $request = new Request(Request::GET, compact('limit_rows', 'limit_offset'), ['leads', 'list']);
-            $data = json_encode($this->api->request($request)->result, true);
+            $data = json_decode(json_encode($this->api->request($request)->result), true);
             if (! empty($data['leads'])) {
                 $this->leads = array_merge($this->leads, $data['leads']);
             }
             $limit_offset += $limit_rows;
-            print_r(compact('limit_rows', 'limit_offset'));
         } while (! empty($data['leads']));
 
         file_put_contents($this->file, json_encode($this->leads));
