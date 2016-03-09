@@ -1,5 +1,6 @@
 tmp/
 bin/
+data/
 *~
 .fuse_hidden*
 .git
@@ -10,5 +11,3 @@ php/
 stat/
 errordocs/
 cgi/
-calls.txt
-update_id

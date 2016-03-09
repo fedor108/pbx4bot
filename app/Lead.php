@@ -14,7 +14,8 @@ class Lead
     public function __construct($domain, $email)
     {
         $this->api = new Handler($domain, $email);
-        $this->file = __DIR__ . '/../tmp/leads';
+        $this->file = __DIR__ . '/../data/leads';
+        $this->leads = [];
     }
 
     public function getCreatedPerUser($params = [])
@@ -26,11 +27,6 @@ class Lead
 
             $user = new User;
             $users_by_amo = $user->getByAmo();
-
-            foreach ($this->leads as $item) {
-                print_r(date('Y-m-d', $item['date_create']));
-                echo ' ';
-            }
 
             if (empty($params['create_from'])) {
                 $params['create_from'] = strtotime(date('Y-m-d'));
@@ -66,24 +62,46 @@ class Lead
 
     public function update()
     {
-        $limit_rows = 500;
         $limit_offset = 0;
-        $this->leads = [];
+        // $limit_offset = $this->getFile();
+        $this->getAmo($limit_offset);
+        $this->saveFile();
+    }
 
+    private function getFile()
+    {
+        $limit_offset = 0;
         if (file_exists($this->file)) {
             $this->leads = json_decode(file_get_contents($this->file), true);
             $limit_offset = count($this->leads);
         }
+        return $limit_offset;
+    }
 
+    private function getAmo($limit_offset = 0, $limit_rows = 500)
+    {
+        $amo_leads = [];
         do {
             $request = new Request(Request::GET, compact('limit_rows', 'limit_offset'), ['leads', 'list']);
             $data = json_decode(json_encode($this->api->request($request)->result), true);
             if (! empty($data['leads'])) {
-                $this->leads = array_merge($this->leads, $data['leads']);
+                $amo_leads = array_merge($amo_leads, $data['leads']);
             }
             $limit_offset += $limit_rows;
         } while (! empty($data['leads']));
 
+        if (! empty($amo_leads)) {
+            $this->leads = array_merge($this->leads, $amo_leads);
+        }
+        return $amo_leads;
+    }
+
+    private function saveFile()
+    {
+        $path = pathinfo($this->file);
+        if (! file_exists($path['dirname'])) {
+            mkdir($path['dirname'], 0775, true);
+        }
         file_put_contents($this->file, json_encode($this->leads));
     }
 }

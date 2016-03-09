@@ -83,6 +83,6 @@ class Call
         $this->calls = $calls;
         $this->time = $time;
 
-        return compact('calls', 'time');
+        return $calls;
     }
 }
