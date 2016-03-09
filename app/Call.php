@@ -52,20 +52,21 @@ class Call
         if (!empty($result['data'])) {
             $user = new User;
             $users_by_pbx = $user->getByPbx();
+            foreach ($users_by_pbx as $item) {
+                $calls[$item['id']] = [
+                    // 'items' => [],
+                    'billsec' => 0,
+                    'user' => $users_by_pbx[$pbx_id],
+                    'count' => 0,
+                ];
+            }
+
             foreach ($result['data'] as $item) {
                 $pbx_id = $item['caller'];
                 if (! array_key_exists($pbx_id, $users_by_pbx)) {
                     continue;
                 }
                 $id = $users_by_pbx[$pbx_id]['id'];
-                if (empty($calls[$id])) {
-                    $calls[$id] = [
-                        // 'items' => [],
-                        'billsec' => 0,
-                        'user' => $users_by_pbx[$pbx_id],
-                        'count' => 0,
-                    ];
-                }
                 // $calls[$id]['items'][] = $item;
                 $calls[$id]['billsec'] += (int) $item['billsec'];
                 $calls[$id]['count']++;

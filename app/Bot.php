@@ -138,7 +138,7 @@ class Bot
         $call = new Call;
         $calls = $call->getCountsPerUser();
 
-        $lead = new Lead('new4', 'fedor@neq4.ru');
+        $lead = new Lead;
         $leads = $lead->getCreatedPerUser();
 
         $report = new Report;
@@ -146,9 +146,11 @@ class Bot
 
         $send_message = $report->saveFile();
 
+        file_put_contents(__DIR__ . '/../tmp/debug.log', print_r(compact('calls', 'leads'), true));
+
         $this->getChatsFromFile();
         foreach ($this->chats as $chat_id) {
-            $this->send($chat_id, $send_message);
+            // $this->send($chat_id, $send_message);
         }
     }
 

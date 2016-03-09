@@ -1,7 +1,6 @@
 <?php
-use \AmoCRM\Handler;
-use \AmoCRM\Request;
-
+require_once __DIR__ . '/config.php';
+require_once __DIR__ . '/User.php';
 require_once __DIR__ . '/../vendor/autoload.php';
 
 class Lead
@@ -11,9 +10,9 @@ class Lead
     public $result;
     public $leads;
 
-    public function __construct($domain, $email)
+    public function __construct()
     {
-        $this->api = new Handler($domain, $email);
+        $this->api = new AmoRestApi(AMO_DOMAIN, AMO_USER, AMO_KEY);
         $this->file = __DIR__ . '/../data/leads';
         $this->leads = [];
     }
@@ -62,9 +61,19 @@ class Lead
 
     public function update()
     {
-        $limit_offset = 0;
-        // $limit_offset = $this->getFile();
-        $this->getAmo($limit_offset);
+        $data = $this->api->getLeadsList(
+            $limit_rows,
+            $limit_offset,
+            $ids = null,
+            $query = null,
+            $responsible = null,
+            $status = null
+            // $dateModified = new DateTime(date('Y-m-d'))
+        );
+
+        file_put_contents(__DIR__ . '/../tmp/leads', print_r($data, true));
+        $this->leads = $data['leads'];
+
         $this->saveFile();
     }
 
@@ -80,20 +89,7 @@ class Lead
 
     private function getAmo($limit_offset = 0, $limit_rows = 500)
     {
-        $amo_leads = [];
-        do {
-            $request = new Request(Request::GET, compact('limit_rows', 'limit_offset'), ['leads', 'list']);
-            $data = json_decode(json_encode($this->api->request($request)->result), true);
-            if (! empty($data['leads'])) {
-                $amo_leads = array_merge($amo_leads, $data['leads']);
-            }
-            $limit_offset += $limit_rows;
-        } while (! empty($data['leads']));
 
-        if (! empty($amo_leads)) {
-            $this->leads = array_merge($this->leads, $amo_leads);
-        }
-        return $amo_leads;
     }
 
     private function saveFile()
