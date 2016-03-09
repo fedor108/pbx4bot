@@ -44,7 +44,8 @@
         "irazasyed/telegram-bot-sdk": "^2.0",
         "fedor108/onpbx": "dev-master",
         "php" : "~5.5|~7.0",
-        "nabarabane/amocrm": "~1.1"
+        "nabarabane/amocrm": "~1.1",
+        "dmamontov/amo-restapi": "~1.0.3"
     },
     "repositories": [
         {
