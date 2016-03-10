@@ -7,8 +7,8 @@ require_once __DIR__ . "/Report.php";
 class Bot
 {
     public $updatesFile;
-    public $updates;
     public $updateIdFile;
+    public $updates;
     public $commands;
 
     public function __construct()
@@ -18,7 +18,6 @@ class Bot
         $this->chats = [];
         $this->updates = [];
         $this->commands = ['calls', 'add'];
-
     }
 
     public function getUpdates()
@@ -50,8 +49,11 @@ class Bot
             mkdir($path['dirname'], 0775, true);
         }
 
-        $id = end($this->updates)['update_id'] + 1;
-        return file_put_contents($this->updateIdFile, $id);
+        if (! empty($this->updates)) {
+            $id = end($this->updates)['update_id'] + 1;
+            return file_put_contents($this->updateIdFile, $id);
+        }
+        return true;
     }
 
     public function commandsExec()
@@ -108,7 +110,9 @@ class Bot
     private function addCommand($chat_id)
     {
         $this->getChatsFromFile();
-        $this->chats[] = $chat_id;
+        if (! in_array($chat_id, $chat_id)) {
+            $this->chats[] = $chat_id;
+        }
         $this->saveChatsFile();
         $this->send($chat_id, 'Вы подписаны на регулярные отчеты по звонкам и сделкам.');
     }
@@ -146,11 +150,9 @@ class Bot
 
         $send_message = $report->saveFile();
 
-        file_put_contents(__DIR__ . '/../tmp/debug.log', print_r(compact('calls', 'leads'), true));
-
         $this->getChatsFromFile();
         foreach ($this->chats as $chat_id) {
-            // $this->send($chat_id, $send_message);
+            $this->send($chat_id, $send_message);
         }
     }
 

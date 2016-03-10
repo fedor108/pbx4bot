@@ -14,6 +14,7 @@ class Report
 
     public function createCallsAndLeads($calls, $leads)
     {
+        file_put_contents(__DIR__ . "/../tmp/debug.log", print_r(compact('calls', 'leads'), true));
         $user = new User;
         $users = $user->get();
         $report = [];

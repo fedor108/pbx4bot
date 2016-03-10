@@ -52,11 +52,11 @@ class Call
         if (!empty($result['data'])) {
             $user = new User;
             $users_by_pbx = $user->getByPbx();
-            foreach ($users_by_pbx as $item) {
+            foreach ($users_by_pbx as $pbx_id => $item) {
                 $calls[$item['id']] = [
                     // 'items' => [],
                     'billsec' => 0,
-                    'user' => $users_by_pbx[$pbx_id],
+                    'user' => $item,
                     'count' => 0,
                 ];
             }
