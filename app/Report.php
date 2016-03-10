@@ -14,7 +14,6 @@ class Report
 
     public function createCallsAndLeads($calls, $leads)
     {
-        file_put_contents(__DIR__ . "/../tmp/debug.log", print_r(compact('calls', 'leads'), true));
         $user = new User;
         $users = $user->get();
         $report = [];
@@ -56,7 +55,7 @@ class Report
         return $res;
     }
 
-    public function saveFile()
+    public function outCallsAndLeads($data)
     {
         $path = pathinfo($this->file);
         if (! file_exists($path['dirname'])) {
@@ -64,11 +63,27 @@ class Report
         }
         $time = date("H:i");
         $res = "Звонки и сделки на {$time}\n";
-        foreach ($this->report as $item) {
+        foreach ($data as $item) {
             $res .= "{$item['user']['name']}: {$item['calls_count']} зв / {$item['billmin']} мин / {$item['leads_count']} сд\n";
         }
         file_put_contents($this->file, $res);
         return $res;
     }
+
+    public function outTasks($data)
+    {
+        $path = pathinfo($this->file);
+        if (! file_exists($path['dirname'])) {
+            mkdir($path['dirname'], 0775, true);
+        }
+        $time = date("H:i");
+        $res = "Просроченные задачи на {$time}\n";
+        foreach ($data as $item) {
+            $res .= "{$item['user']['name']}: {$item['count']}\n";
+        }
+        file_put_contents($this->file, $res);
+        return $res;
+    }
+
 
 }

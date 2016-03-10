@@ -2,6 +2,7 @@
 require_once __DIR__ . "/config.php";
 require_once __DIR__ . "/Call.php";
 require_once __DIR__ . "/Lead.php";
+require_once __DIR__ . "/Task.php";
 require_once __DIR__ . "/Report.php";
 
 class Bot
@@ -70,6 +71,8 @@ class Bot
                         $this->callsCommand($chat_id);
                     } elseif('add' == $command) {
                         $this->addCommand($chat_id);
+                    } elseif('tasks' == $command) {
+                        $this->tasksCommand($chat_id);
                     } else {
                         $this->unknownCommand($chat_id);
                     }
@@ -97,13 +100,24 @@ class Bot
         $call = new Call;
         $calls = $call->getCountsPerUser();
 
-        $lead = new Lead('new4', 'fedor@neq4.ru');
+        $lead = new Lead();
         $leads = $lead->getCreatedPerUser();
 
         $report = new Report;
-        $report->createCallsAndLeads($calls, $leads);
+        $data = $report->createCallsAndLeads($calls, $leads);
 
-        $send_message = $report->saveFile();
+        $send_message = $report->outCallsAndLeads($data);
+        $this->send($chat_id, $send_message);
+    }
+
+    private function tasksCommand($chat_id)
+    {
+        $task = new Task();
+        $tasks = $task->getOverduePerUser();
+
+        $report = new Report;
+
+        $send_message = $report->outTasks($tasks);
         $this->send($chat_id, $send_message);
     }
 
@@ -146,9 +160,9 @@ class Bot
         $leads = $lead->getCreatedPerUser();
 
         $report = new Report;
-        $report->createCallsAndLeads($calls, $leads);
+        $data = $report->createCallsAndLeads($calls, $leads);
 
-        $send_message = $report->saveFile();
+        $send_message = $report->outCallsAndLeads($data);
 
         $this->getChatsFromFile();
         foreach ($this->chats as $chat_id) {
