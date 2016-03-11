@@ -1,6 +1,5 @@
 calls.txt
 config.php
-composer.lock
 vendor/
 tmp/
 data/
