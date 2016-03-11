@@ -48,7 +48,7 @@ class Task
         $dateModified = null;
         $this->data = [];
         if (file_exists($this->file)) {
-            $dateModified = new DateTime(filemtime($this->file));
+            $dateModified = new DateTime(date("Y-m-d H:i:s", filemtime($this->file)));
             $this->data = json_decode(file_get_contents($this->file), true);
         }
 
