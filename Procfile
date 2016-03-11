@@ -1,0 +1,1 @@
+web: bin/herroku-app-apache2 web/
